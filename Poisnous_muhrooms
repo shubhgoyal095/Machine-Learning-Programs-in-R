@@ -1,0 +1,18 @@
+#data import from excell
+mushrooms <- read.csv("E:\\Data_Science\\self_study\\Poisnous_muhrooms\\mushrooms.csv", stringsAsFactors = TRUE)
+str(mushrooms)
+
+#Data cleaning
+mushrooms$veil.type <- NULL
+table(mushrooms$class)
+
+#model training
+#install.packages("RWeka")
+library(RWeka)
+mushrooms_1R <- OneR(class ~ ., data = mushrooms)
+mushrooms_1R
+summary(mushrooms_1R)
+
+#improving model performance
+mushrooms_JRip <- JRip(class ~ ., data = mushrooms)
+mushrooms_JRip
