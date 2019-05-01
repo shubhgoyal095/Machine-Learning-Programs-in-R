@@ -1,0 +1,28 @@
+#Data insert into R
+insurance <- read.csv("E:\\Data_Science\\self_study\\Medical_Cost_Personal_Datasets\\insurance.csv", stringsAsFactors = TRUE)
+str(insurance)
+
+#Analyse the data
+summary(insurance)
+summary(insurance$charges)
+hist(insurance$charges)
+table(insurance$region)
+
+#Find coorelation in independent data objects
+cor(insurance[c ("age", "bmi", "children", "charges")])
+pairs(insurance[c ("age", "bmi", "children", "charges")])
+
+install.packages("psych")
+library(psych)
+pairs.panels(insurance[c ("age", "bmi", "children", "charges")])
+
+#create linear regression model
+ins_model <- lm(charges ~ age + children + bmi + sex + smoker + region , data =  insurance)
+ins_model
+summary(ins_model)
+
+#increase model performance
+insurance$age2 <- insurance$age^2
+insurance$bmi30 <- ifelse(insurance$bmi >= 30, 1, 0)
+ins_model2 <- lm(charges ~ age + age2 + children + bmi + sex + bmi30*smoker + region, data = insurance)
+summary(ins_model2)
