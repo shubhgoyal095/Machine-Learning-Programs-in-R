@@ -1,0 +1,47 @@
+# Load data into R
+wine <- read.csv("E:\\Data_Science\\self_study\\WhiteWine\\winequality-data.csv")
+str(wine)
+
+#Preparation of Data
+hist(wine$quality)
+wine_train <- wine[1:3000, ]
+wine_test <- wine[3001:3918, ]
+
+#Training a Model on data
+install.packages("rpart")
+library(rpart)
+m.rpart <- rpart(quality ~ ., data = wine_train)
+m.rpart
+summary(m.rpart)
+
+install.packages("rpart.plot")
+library(rpart.plot)
+rpart.plot(m.rpart, digits = 3)
+rpart.plot(m.rpart, digits = 4, fallen.leaves = TRUE, type = 3, extra = 101)
+
+#Predict the data using model
+p.rpart <- predict(m.rpart, wine_test)
+
+summary(p.rpart)
+summary(wine_test$quality)
+
+cor(p.rpart, wine_test$quality)
+
+# Find mean squar error to check accuracy
+MAE <- function(actual, predicted) {
+  mean(abs(actual - predicted))
+}
+
+MAE(p.rpart, wine_test$quality)
+mean(wine_train$quality)
+MAE(5.87, wine_test$quality)
+
+#improve model performance
+library(RWeka)
+m.m5p <- M5P(quality ~ ., data = wine_train)
+m.m5p
+summary(m.m5p)
+p.m5p <- predict(m.m5p, wine_test)
+summary(p.m5p)
+cor(p.m5p, wine_test$quality)
+MAE(wine_test$quality, p.m5p)
